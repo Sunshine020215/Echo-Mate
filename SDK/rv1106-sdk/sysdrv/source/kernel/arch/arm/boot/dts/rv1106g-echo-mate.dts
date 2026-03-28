@@ -114,6 +114,23 @@
 
 
 /**********UART**********/
+
+/**********BT**********/
+&uart0 {
+	status = "okay";
+	/delete-property/ pinctrl-0;
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0m1_xfer &uart0m1_ctsn &uart0m1_rtsn>;
+};
+
+&pinctrl {
+	uart0 {
+		uart0_rts_gpio: uart0-rts-gpio {
+			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_down>;
+		};
+	};
+};
+
 /* UART3_M1 */
 &uart3 {
 	status = "disabled";
