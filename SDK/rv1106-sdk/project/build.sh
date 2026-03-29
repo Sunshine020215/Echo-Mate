@@ -1027,6 +1027,7 @@ function build_all() {
 	build_sysdrv
 	build_media
 	build_app
+	build_rtk_bt_tool
 	build_firmware
 
 	finish_build
@@ -2055,6 +2056,26 @@ function __RUN_PRE_BUILD_OEM_SCRIPT() {
 	if [ -f "$tmp_path/$RK_PRE_BUILD_OEM_SCRIPT" ]; then
 		$tmp_path/$RK_PRE_BUILD_OEM_SCRIPT
 	fi
+}
+
+function build_rtk_bt_tool() {
+    msg_info "============Start building rtk_hciattach============"
+    local BT_SRC_DIR="${SDK_ROOT_DIR}/project/app/bluetooth_rtk"
+    local BT_OUT_DIR="${RK_PROJECT_PATH_APP}/bin"
+    
+    if [ -d "$BT_SRC_DIR" ]; then
+        # 使用脚本中定义的交叉编译器变量
+        # 强制静态编译以兼容 uclibc 环境
+        cd "$BT_SRC_DIR"
+        ${RK_PROJECT_TOOLCHAIN_CROSS}-gcc -static -o rtk_hciattach hciattach.c hciattach_rtk.c
+        
+        # 将生成的二进制文件放入 app 输出目录，后续会被自动拷贝
+        mkdir -p "$BT_OUT_DIR"
+        cp -f rtk_hciattach "$BT_OUT_DIR/"
+        msg_info "rtk_hciattach build success: $BT_OUT_DIR/rtk_hciattach"
+    else
+        msg_warn "RTK BT source not found at $BT_SRC_DIR, skipping..."
+    fi
 }
 
 function build_firmware() {
