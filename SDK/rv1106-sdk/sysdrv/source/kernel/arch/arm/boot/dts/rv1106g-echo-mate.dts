@@ -91,6 +91,9 @@
 /* I2C3_M1 */
 &i2c3 {
 	status = "okay";
+	/delete-property/ pinctrl-0;
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c3m1_xfer>;
 	clock-frequency = <100000>;
     focaltech@38 { 
 		compatible = "focaltech,fts";	
